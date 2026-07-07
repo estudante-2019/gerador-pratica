@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Gerador de Atividades Práticas SENAI</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+@media print{
+
+    body{
+        background:white;
+        margin:0;
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+    }
+
+    .assistente{
+        display:none !important;
+    }
+
+    #btn-imprimir{
+        display:none !important;
+    }
+
+    .pagina{
+        display:block !important;
+        box-shadow:none;
+        margin:0;
+        width:100%;
+        border:none;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ====================================================== -->
+<!-- ASSISTENTE -->
+<!-- ====================================================== -->
+
+<div class="assistente" id="assistente">
+
+    <!-- PASSO 1 -->
+
+    <section class="etapa ativa" id="etapa1">
+
+        <img
+        src="./assets/img/senai.webp"
+        class="logo-boas-vindas">
+
+        <h1>
+            Gerador de Atividades Práticas SENAI
+        </h1>
+
+        <p>
+            Bem-vindo!
+        </p>
+
+        <p>
+            Este sistema transforma uma atividade prática criada pelo ChatGPT em uma avaliação pronta para impressão no padrão SENAI.
+        </p>
+
+        <p>
+            O processo leva menos de 1 minuto.
+        </p>
+
+        <button id="btn-etapa1">
+
+            Começar
+
+        </button>
+
+    </section>
+
+
+
+    <!-- PASSO 2 -->
+
+    <section class="etapa" id="etapa2">
+
+        <h2>
+
+            Passo 1 de 3
+
+        </h2>
+
+        <h3>
+
+            Estrutura da Atividade
+
+        </h3>
+
+        <p>
+
+            Copie a estrutura abaixo.
+
+        </p>
+
+        <p>
+
+            Cole no ChatGPT e peça para gerar uma atividade prática utilizando exatamente esse mesmo formato.
+
+        </p>
+
+<textarea id="modelo" readonly>
+const prova = {
+
+  data:"",
+  docente:"",
+  curso:"",
+  unidade:"",
+  turma:"",
+
+  titulo:"",
+  descricao:"",
+
+  itens:[
+
+    {
+
+      capacidade:"",
+      contexto:"",
+      pergunta:"",
+      alternativas:[]
+
+    }
+
+  ]
+
+}
+</textarea>
+
+<div class="botoes">
+
+<button id="copiar">
+
+📋 Copiar Estrutura
+
+</button>
+
+<button id="btn-etapa2">
+
+Próximo
+
+</button>
+
+</div>
+
+    </section>
+
+
+
+
+
+    <!-- PASSO 3 -->
+
+    <section class="etapa" id="etapa3">
+
+        <h2>
+
+            Passo 2 de 3
+
+        </h2>
+
+        <h3>
+
+            Cole aqui a resposta do ChatGPT
+
+        </h3>
+
+        <p>
+
+            Gere sua atividade utilizando exatamente a estrutura anterior.
+
+        </p>
+
+        <p>
+
+            Depois copie toda a resposta e cole abaixo.
+
+        </p>
+
+<textarea
+id="entrada"
+placeholder="Cole aqui o código iniciado por const prova = { ... }">
+</textarea>
+
+<div class="botoes">
+
+<button id="voltar">
+
+Voltar
+
+</button>
+
+<button id="gerar">
+
+Gerar Atividade
+
+</button>
+
+</div>
+
+<div id="erro"></div>
+
+    </section>
+
+</div>
+
+
+
+
+
+<!-- ====================================================== -->
+<!-- PÁGINA DA ATIVIDADE -->
+<!-- ====================================================== -->
+
+<div
+class="pagina"
+id="pagina"
+style="display:none;">
+
+<div class="cabecalho">
+
+<img
+src="./assets/img/senai1.png"
+class="logo">
+
+<table>
+
+<tr>
+
+<td><strong>Data:</strong></td>
+
+<td id="data"></td>
+
+<td
+rowspan="6"
+class="desempenho">
+
+Desempenho
+
+</td>
+
+</tr>
+
+<tr>
+
+<td><strong>Docente:</strong></td>
+
+<td id="docente"></td>
+
+</tr>
+
+<tr>
+
+<td><strong>Curso:</strong></td>
+
+<td id="curso"></td>
+
+</tr>
+
+<tr>
+
+<td><strong>Unidade Curricular:</strong></td>
+
+<td id="unidade"></td>
+
+</tr>
+
+<tr>
+
+<td><strong>Turma:</strong></td>
+
+<td id="turma"></td>
+
+</tr>
+
+<tr>
+
+<td><strong>Técnico:</strong></td>
+
+<td>
+
+______________________________________________
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+<div
+class="titulo"
+id="titulo">
+</div>
+
+<div
+class="instrucoes"
+id="descricao">
+</div>
+
+<div
+id="questoes-container">
+</div>
+
+<button
+id="btn-imprimir"
+onclick="window.print()">
+
+🖨️ Imprimir / Salvar em PDF
+
+</button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

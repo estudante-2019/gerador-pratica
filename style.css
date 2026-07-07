@@ -1,0 +1,630 @@
+/* =======================================================
+   RESET
+======================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    background:#ececec;
+
+    color:#222;
+
+    padding:40px;
+
+}
+
+/* =======================================================
+   ASSISTENTE
+======================================================= */
+
+.assistente{
+
+    width:100%;
+    max-width:900px;
+
+    margin:auto;
+
+}
+
+.etapa{
+
+    display:none;
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:45px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.10);
+
+    animation:fade .35s;
+
+}
+
+.etapa.ativa{
+
+    display:block;
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+transform:translateY(15px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+.logo-boas-vindas{
+
+    display:block;
+
+    width:180px;
+
+    margin:auto auto 35px auto;
+
+}
+
+.etapa h1{
+
+    text-align:center;
+
+    color:#003b82;
+
+    margin-bottom:20px;
+
+    font-size:34px;
+
+}
+
+.etapa h2{
+
+    color:#003b82;
+
+    margin-bottom:12px;
+
+}
+
+.etapa h3{
+
+    margin-bottom:18px;
+
+}
+
+.etapa p{
+
+    margin-bottom:14px;
+
+    line-height:1.7;
+
+}
+
+textarea{
+
+    width:100%;
+
+    height:380px;
+
+    resize:vertical;
+
+    border:1px solid #bbb;
+
+    border-radius:8px;
+
+    padding:18px;
+
+    font-size:14px;
+
+    font-family:Consolas,monospace;
+
+    background:#fafafa;
+
+    margin-top:20px;
+
+}
+
+.botoes{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:15px;
+
+    margin-top:30px;
+
+}
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    background:#004080;
+
+    color:white;
+
+    padding:14px 26px;
+
+    border-radius:8px;
+
+    font-size:15px;
+
+    transition:.25s;
+
+}
+
+button:hover{
+
+    background:#0057b8;
+
+}
+
+#erro{
+
+    margin-top:18px;
+
+    color:#d60000;
+
+    font-weight:bold;
+
+}
+
+/* =======================================================
+   PÁGINA DA PROVA
+======================================================= */
+
+.pagina{
+
+    display:none;
+
+    width:900px;
+
+    margin:40px auto;
+
+    background:white;
+
+    padding:35px;
+
+    border:1px solid #cfcfcf;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+}
+
+.logo{
+
+    width:140px;
+
+}
+
+.cabecalho{
+
+    display:flex;
+
+    gap:20px;
+
+    margin-bottom:25px;
+
+    align-items:flex-start;
+
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    font-size:14px;
+
+}
+
+td{
+
+    padding:6px;
+
+    vertical-align:top;
+
+}
+
+.desempenho{
+
+    width:120px;
+
+    border:1px solid #000;
+
+    text-align:center;
+
+    font-weight:bold;
+
+}
+
+.titulo{
+
+    background:#004080;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    padding:12px;
+
+    margin-bottom:18px;
+
+}
+
+.instrucoes{
+
+    font-size:14px;
+
+    line-height:1.7;
+
+    margin-bottom:28px;
+
+    white-space:pre-line;
+
+}
+
+.item{
+
+    border:1px solid #d6d6d6;
+
+    margin-bottom:24px;
+
+}
+
+.item-titulo{
+
+    background:#004080;
+
+    color:white;
+
+    padding:8px 12px;
+
+    font-weight:bold;
+
+}
+
+.item-capacidade{
+
+    padding:10px 12px;
+
+    color:#004080;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    border-bottom:1px solid #eee;
+
+}
+
+.item-contexto{
+
+    padding:12px;
+
+    font-size:14px;
+
+    line-height:1.6;
+
+}
+
+.item-pergunta{
+
+    padding:12px;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+}
+
+.item-alternativas{
+
+    padding:0 12px 12px;
+
+}
+
+.item-alternativas p{
+
+    margin:8px 0;
+
+    line-height:1.5;
+
+}
+
+.item-imagem{
+
+    text-align:center;
+
+    padding:15px;
+
+}
+
+.item-imagem img{
+
+    max-width:320px;
+
+    max-height:260px;
+
+    border:1px solid #bbb;
+
+}
+
+/* =======================================================
+   BOTÃO IMPRIMIR
+======================================================= */
+
+#btn-imprimir{
+
+    position:fixed;
+
+    right:25px;
+
+    bottom:25px;
+
+    z-index:999;
+
+    background:#004080;
+
+    color:white;
+
+    padding:16px 24px;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    font-weight:bold;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+
+}
+
+#btn-imprimir:hover{
+
+    background:#0059b8;
+
+}
+
+/* =======================================================
+   RESPONSIVO
+======================================================= */
+
+@media (max-width:950px){
+
+body{
+
+    padding:20px;
+
+}
+
+.assistente{
+
+    max-width:100%;
+
+}
+
+.etapa{
+
+    padding:25px;
+
+}
+
+.pagina{
+
+    width:100%;
+
+    padding:20px;
+
+}
+
+.cabecalho{
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+.logo{
+
+    margin-bottom:15px;
+
+}
+
+table{
+
+    font-size:13px;
+
+}
+
+textarea{
+
+    height:320px;
+
+}
+
+.botoes{
+
+    flex-direction:column;
+
+}
+
+.botoes button{
+
+    width:100%;
+
+}
+
+#btn-imprimir{
+
+    left:20px;
+
+    right:20px;
+
+    bottom:20px;
+
+    width:auto;
+
+}
+
+.item-imagem img{
+
+    max-width:100%;
+
+    height:auto;
+
+}
+
+}
+
+/* =======================================================
+   IMPRESSÃO
+======================================================= */
+
+@media print{
+
+body{
+
+    background:white !important;
+
+    padding:0;
+
+}
+
+.assistente{
+
+    display:none !important;
+
+}
+
+#btn-imprimir{
+
+    display:none !important;
+
+}
+
+.pagina{
+
+    display:block !important;
+
+    width:100%;
+
+    margin:0;
+
+    padding:20px;
+
+    border:none;
+
+    box-shadow:none;
+
+}
+
+.item{
+
+    page-break-inside:avoid;
+
+}
+
+}
+
+/* =======================================================
+   HTML DA PERGUNTA (ATIVIDADES PRÁTICAS)
+======================================================= */
+
+.item-pergunta{
+
+    padding:12px;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+}
+
+.item-pergunta table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    margin:18px 0;
+
+}
+
+.item-pergunta th,
+.item-pergunta td{
+
+    border:1px solid #999;
+
+    padding:8px;
+
+    text-align:left;
+
+    vertical-align:top;
+
+    font-size:14px;
+
+}
+
+.item-pergunta th{
+
+    background:#f3f3f3;
+
+}
+
+.item-pergunta ul,
+.item-pergunta ol{
+
+    margin:10px 0 10px 25px;
+
+}
+
+.item-pergunta li{
+
+    margin:6px 0;
+
+}
+
+.item-pergunta b{
+
+    color:#003b82;
+
+}
+
+.item-pergunta br{
+
+    line-height:2;
+
+}
