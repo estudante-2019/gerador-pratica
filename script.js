@@ -1,911 +1,461 @@
-/* ===========================================================
-   RESET
-=========================================================== */
+// ===========================================================
+// GERADOR DE ATIVIDADES PRÁTICAS SENAI
+// Parte 1
+// Navegação + Parser + Validação
+// ===========================================================
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+window.addEventListener("DOMContentLoaded", () => {
 
-html{
+    // =======================================================
+    // ELEMENTOS
+    // =======================================================
 
-    scroll-behavior:smooth;
+    const etapa1 = document.getElementById("etapa1");
+    const etapa2 = document.getElementById("etapa2");
+    const etapa3 = document.getElementById("etapa3");
 
-}
+    const btnEtapa1 = document.getElementById("btn-etapa1");
+    const btnEtapa2 = document.getElementById("btn-etapa2");
+    const btnVoltar = document.getElementById("voltar");
 
-body{
+    const btnCopiar = document.getElementById("copiar");
+    const btnGerar = document.getElementById("gerar");
 
-    font-family:Arial,Helvetica,sans-serif;
+    const modelo = document.getElementById("modelo");
+    const entrada = document.getElementById("entrada");
 
-    background:#ececec;
+    const erro = document.getElementById("erro");
 
-    color:#222;
+    const assistente = document.getElementById("assistente");
+    const pagina = document.getElementById("pagina");
 
-    padding:40px;
+    const container = document.getElementById("questoes-container");
 
-    line-height:1.6;
+    // =======================================================
+    // NAVEGAÇÃO ENTRE ETAPAS
+    // =======================================================
 
-}
+    function mostrar(etapa){
 
+        document.querySelectorAll(".etapa").forEach(e=>{
 
+            e.classList.remove("ativa");
 
-/* ===========================================================
-   ASSISTENTE
-=========================================================== */
+        });
 
-.assistente{
+        etapa.classList.add("ativa");
 
-    width:100%;
+        window.scrollTo({
 
-    max-width:950px;
+            top:0,
+            behavior:"smooth"
 
-    margin:auto;
-
-}
-
-
-
-/* ===========================================================
-   ETAPAS
-=========================================================== */
-
-.etapa{
-
-    display:none;
-
-    background:#fff;
-
-    border-radius:12px;
-
-    padding:45px;
-
-    box-shadow:0 10px 35px rgba(0,0,0,.10);
-
-    animation:fade .35s ease;
-
-}
-
-.etapa.ativa{
-
-    display:block;
-
-}
-
-@keyframes fade{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(15px);
+        });
 
     }
 
-    to{
+    btnEtapa1.onclick=()=>mostrar(etapa2);
+    btnEtapa2.onclick=()=>mostrar(etapa3);
+    btnVoltar.onclick=()=>mostrar(etapa2);
 
-        opacity:1;
+    // =======================================================
+    // COPIAR MODELO
+    // =======================================================
 
-        transform:translateY(0);
+    btnCopiar.onclick=()=>{
+
+        navigator.clipboard.writeText(modelo.value);
+
+        const textoOriginal=btnCopiar.innerHTML;
+
+        btnCopiar.innerHTML="✔ Estrutura copiada";
+
+        setTimeout(()=>{
+
+            btnCopiar.innerHTML=textoOriginal;
+
+        },1800);
+
+    };
+
+    // =======================================================
+    // PARSER
+    // Aceita:
+    //
+    // const prova = {...}
+    //
+    // ou somente
+    //
+    // {...}
+    // =======================================================
+
+    function parseProva(texto){
+
+        try{
+
+            texto=texto.trim();
+
+            if(texto.startsWith("const prova")){
+
+                texto=texto.replace(/^const\s+prova\s*=\s*/,"");
+
+            }
+
+            if(texto.endsWith(";")){
+
+                texto=texto.slice(0,-1);
+
+            }
+
+            const prova=Function(
+
+                `"use strict"; return (${texto});`
+
+            )();
+
+            return prova;
+
+        }
+
+        catch(e){
+
+            console.error(e);
+
+            return null;
+
+        }
 
     }
 
-}
+    // =======================================================
+    // VALIDAÇÃO
+    // =======================================================
 
+    function validarProva(prova){
 
+        if(!prova){
 
-/* ===========================================================
-   LOGO
-=========================================================== */
+            return "Não foi possível interpretar a atividade.";
 
-.logo-boas-vindas{
+        }
 
-    display:block;
+        if(typeof prova!=="object"){
 
-    width:170px;
+            return "Estrutura inválida.";
 
-    margin:0 auto 35px auto;
+        }
 
-}
+        if(!Array.isArray(prova.itens)){
 
+            return "O campo 'itens' não foi encontrado.";
 
+        }
 
-/* ===========================================================
-   TÍTULOS
-=========================================================== */
+        if(prova.itens.length===0){
 
-.etapa h1{
+            return "A atividade não possui itens.";
 
-    text-align:center;
+        }
 
-    color:#004080;
+        return null;
 
-    font-size:34px;
+    }
 
-    margin-bottom:25px;
+    // =======================================================
+    // NORMALIZAÇÃO DOS CAMPOS
+    // =======================================================
 
-}
+    function normalizarItem(item){
 
-.etapa h2{
+        return{
 
-    color:#004080;
+            capacidade:item.capacidade || "",
 
-    font-size:25px;
+            contexto:item.contexto || "",
 
-    margin-bottom:15px;
+            pergunta:item.pergunta || "",
 
-}
+            alternativas:Array.isArray(item.alternativas)
 
-.etapa h3{
+                ? item.alternativas
 
-    margin-bottom:20px;
+                :[]
 
-    font-size:20px;
+        };
 
-}
+    }
 
+    function normalizarProva(prova){
 
+        return{
 
-/* ===========================================================
-   PARÁGRAFOS
-=========================================================== */
+            data:prova.data || "",
 
-.etapa p{
+            docente:prova.docente || "",
 
-    margin-bottom:15px;
+            curso:prova.curso || "",
 
-    line-height:1.7;
+            unidade:prova.unidade || "",
 
-    font-size:16px;
+            turma:prova.turma || "",
 
-}
+            titulo:prova.titulo || "",
 
+            descricao:prova.descricao || "",
 
+            itens:prova.itens.map(normalizarItem)
 
-/* ===========================================================
-   TEXTAREAS
-=========================================================== */
+        };
 
-textarea{
+    }
 
-    width:100%;
+    // =======================================================
+    // BOTÃO GERAR
+    // (continua na Parte 2)
+    // =======================================================
 
-    min-height:380px;
+    btnGerar.onclick=()=>{
 
-    resize:vertical;
+        erro.innerHTML="";
 
-    margin-top:20px;
+        const texto=entrada.value.trim();
 
-    border:1px solid #c9c9c9;
+        if(!texto){
 
-    border-radius:8px;
+            erro.innerHTML="Cole a estrutura gerada pelo ChatGPT.";
 
-    background:#fafafa;
+            return;
 
-    padding:18px;
+        }
 
-    font-family:Consolas,monospace;
+        let prova=parseProva(texto);
 
-    font-size:14px;
+        const erroValidacao=validarProva(prova);
 
-    line-height:1.6;
+        if(erroValidacao){
 
-    outline:none;
+            erro.innerHTML=erroValidacao;
 
-    transition:.25s;
+            return;
 
-}
+        }
 
-textarea:focus{
+        prova=normalizarProva(prova);
 
-    border-color:#004080;
+        // Continua na PARTE 2...
+               // =======================================================
+        // PREENCHER CABEÇALHO
+        // =======================================================
 
-    box-shadow:0 0 0 3px rgba(0,64,128,.12);
+        document.getElementById("data").textContent = prova.data;
 
-}
+        document.getElementById("docente").textContent = prova.docente;
 
+        document.getElementById("curso").textContent = prova.curso;
 
+        document.getElementById("unidade").textContent = prova.unidade;
 
-/* ===========================================================
-   BOTÕES
-=========================================================== */
+        document.getElementById("turma").textContent = prova.turma;
 
-.botoes{
+        document.getElementById("titulo").textContent = prova.titulo;
 
-    display:flex;
+        document.getElementById("descricao").textContent = prova.descricao;
 
-    justify-content:flex-end;
+        // =======================================================
+        // EXIBIR PÁGINA
+        // =======================================================
 
-    gap:15px;
+        assistente.style.display = "none";
 
-    margin-top:30px;
+        pagina.style.display = "block";
 
-    flex-wrap:wrap;
+        container.innerHTML = "";
 
-}
+        // =======================================================
+        // RENDERIZAÇÃO DOS ITENS
+        // =======================================================
 
-button{
+        prova.itens.forEach((item,index)=>{
 
-    border:none;
+            const bloco=document.createElement("div");
 
-    cursor:pointer;
+            bloco.className="item";
 
-    background:#004080;
+            bloco.innerHTML=`
 
-    color:#fff;
+                <div class="item-titulo">
 
-    padding:14px 28px;
+                    ITEM ${index+1}
 
-    border-radius:8px;
+                </div>
 
-    font-size:15px;
+                <div class="item-capacidade">
 
-    transition:.25s;
+                    CAPACIDADE: ${item.capacidade}
 
-    font-weight:bold;
+                </div>
 
-}
+                <div class="item-contexto">
 
-button:hover{
+                    ${item.contexto}
 
-    background:#005ab5;
+                </div>
 
-    transform:translateY(-1px);
+                <div class="item-pergunta">
 
-}
+                    ${item.pergunta}
 
-button:active{
+                </div>
 
-    transform:scale(.98);
+            `;
 
-}
+            // ===========================================
+            // ALTERNATIVAS (caso existam)
+            // ===========================================
 
+            if(item.alternativas.length){
 
+                const alternativas=document.createElement("div");
 
-/* ===========================================================
-   MENSAGEM DE ERRO
-=========================================================== */
+                alternativas.className="item-alternativas";
 
-#erro{
+                item.alternativas.forEach((alt,i)=>{
 
-    margin-top:20px;
+                    const p=document.createElement("p");
 
-    color:#d00000;
+                    p.innerHTML=`
 
-    font-weight:bold;
+                        <strong>${String.fromCharCode(65+i)})</strong>
 
-    font-size:15px;
+                        ${alt}
 
-    line-height:1.5;
+                    `;
 
-}
+                    alternativas.appendChild(p);
 
+                });
 
+                bloco.appendChild(alternativas);
 
-/* ===========================================================
-   PÁGINA DA PROVA
-=========================================================== */
+            }
 
-.pagina{
+            container.appendChild(bloco);
 
-    display:none;
+        });
 
-    width:900px;
+        // =======================================================
+        // VOLTA PARA O TOPO
+        // =======================================================
 
-    margin:40px auto;
+        window.scrollTo({
 
-    background:white;
+            top:0,
 
-    padding:35px;
+            behavior:"smooth"
 
-    border:1px solid #d5d5d5;
+        });
 
-    box-shadow:0 12px 35px rgba(0,0,0,.12);
+        // Continua na Parte 3...
+               // =======================================================
+        // BOTÃO IMPRIMIR
+        // =======================================================
 
-}
-/* ===========================================================
-   CABEÇALHO DA AVALIAÇÃO
-=========================================================== */
+        const btnImprimir = document.getElementById("btn-imprimir");
 
-.cabecalho{
+        if(btnImprimir){
 
-    display:flex;
+            btnImprimir.onclick = ()=>{
 
-    align-items:flex-start;
+                btnImprimir.style.display="none";
 
-    gap:22px;
+                setTimeout(()=>{
 
-    margin-bottom:35px;
+                    window.print();
 
-}
+                    setTimeout(()=>{
 
-.logo{
+                        btnImprimir.style.display="flex";
 
-    width:145px;
+                    },500);
 
-    flex-shrink:0;
+                },150);
 
-}
+            };
 
+        }
 
+    };
 
-/* ===========================================================
-   TABELA DO CABEÇALHO
-=========================================================== */
+    // =======================================================
+    // UTILITÁRIOS
+    // =======================================================
 
-.cabecalho table{
+    function limpar(){
 
-    width:100%;
+        container.innerHTML="";
 
-    border-collapse:collapse;
+        document.getElementById("data").textContent="";
 
-    font-size:14px;
+        document.getElementById("docente").textContent="";
 
-}
+        document.getElementById("curso").textContent="";
 
-.cabecalho td{
+        document.getElementById("unidade").textContent="";
 
-    padding:6px 8px;
+        document.getElementById("turma").textContent="";
 
-    vertical-align:top;
+        document.getElementById("titulo").textContent="";
 
-}
+        document.getElementById("descricao").textContent="";
 
-.cabecalho td strong{
+    }
 
-    color:#222;
+    function mostrarErro(mensagem){
 
-}
+        erro.innerHTML=mensagem;
 
-.desempenho{
+        assistente.style.display="block";
 
-    width:120px;
+        pagina.style.display="none";
 
-    border:1px solid #000;
+        limpar();
 
-    text-align:center;
+        window.scrollTo({
 
-    font-weight:bold;
+            top:0,
 
-    vertical-align:middle !important;
+            behavior:"smooth"
 
-}
+        });
 
+    }
 
+    // =======================================================
+    // SEGURANÇA
+    // =======================================================
 
-/* ===========================================================
-   TÍTULO DA AVALIAÇÃO
-=========================================================== */
+    window.addEventListener("error",(e)=>{
 
-.titulo{
+        console.error(e);
 
-    background:#004080;
+    });
 
-    color:#fff;
+    window.addEventListener("unhandledrejection",(e)=>{
 
-    text-align:center;
+        console.error(e.reason);
 
-    font-size:22px;
+    });
 
-    font-weight:bold;
+    // =======================================================
+    // FINALIZAÇÃO
+    // =======================================================
 
-    padding:12px;
+    console.log(
 
-    margin-bottom:20px;
+        "%cGerador de Atividades Práticas SENAI carregado.",
 
-    border-radius:2px;
+        "color:#004080;font-weight:bold;font-size:13px;"
 
-}
+    );
 
-
-
-/* ===========================================================
-   DESCRIÇÃO
-=========================================================== */
-
-.descricao{
-
-    margin-bottom:28px;
-
-    font-size:14px;
-
-    line-height:1.8;
-
-    white-space:pre-line;
-
-}
-
-
-
-/* ===========================================================
-   CONTAINER DOS ITENS
-=========================================================== */
-
-#questoes-container{
-
-    width:100%;
-
-}
-
-
-
-/* ===========================================================
-   ITEM
-=========================================================== */
-
-.item{
-
-    border:1px solid #d5d5d5;
-
-    margin-bottom:28px;
-
-    background:#fff;
-
-    page-break-inside:avoid;
-
-}
-
-
-
-/* ===========================================================
-   CABEÇALHO DO ITEM
-=========================================================== */
-
-.item-titulo{
-
-    background:#004080;
-
-    color:#fff;
-
-    padding:9px 14px;
-
-    font-weight:bold;
-
-    font-size:15px;
-
-}
-
-
-
-/* ===========================================================
-   CAPACIDADE
-=========================================================== */
-
-.item-capacidade{
-
-    padding:12px 14px;
-
-    color:#004080;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    border-bottom:1px solid #ececec;
-
-}
-
-
-
-/* ===========================================================
-   CONTEXTO
-=========================================================== */
-
-.item-contexto{
-
-    padding:14px;
-
-    font-size:14px;
-
-    line-height:1.8;
-
-    white-space:pre-line;
-
-}
-
-
-
-/* ===========================================================
-   PERGUNTA
-=========================================================== */
-
-.item-pergunta{
-
-    padding:14px;
-
-    font-size:15px;
-
-    line-height:1.8;
-
-}
-
-
-
-/* ===========================================================
-   ALTERNATIVAS
-=========================================================== */
-
-.item-alternativas{
-
-    padding:0 14px 14px;
-
-}
-
-.item-alternativas p{
-
-    margin:8px 0;
-
-    line-height:1.7;
-
-}
-
-
-
-/* ===========================================================
-   IMAGENS
-=========================================================== */
-
-.item img{
-
-    display:block;
-
-    max-width:100%;
-
-    height:auto;
-
-    margin:18px auto;
-
-}
-
-
-
-/* ===========================================================
-   BOTÃO IMPRIMIR
-=========================================================== */
-
-#btn-imprimir{
-
-    position:fixed;
-
-    right:20px;
-
-    bottom:20px;
-
-    width:46px;
-
-    height:46px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:#444;
-
-    color:#fff;
-
-    font-size:18px;
-
-    cursor:pointer;
-
-    box-shadow:0 5px 15px rgba(0,0,0,.25);
-
-    transition:.25s;
-
-    opacity:.80;
-
-    z-index:999;
-
-}
-
-#btn-imprimir:hover{
-
-    opacity:1;
-
-    background:#004080;
-
-    transform:scale(1.05);
-
-}
-/* ===========================================================
-   CABEÇALHO DA AVALIAÇÃO
-=========================================================== */
-
-.cabecalho{
-
-    display:flex;
-
-    align-items:flex-start;
-
-    gap:22px;
-
-    margin-bottom:35px;
-
-}
-
-.logo{
-
-    width:145px;
-
-    flex-shrink:0;
-
-}
-
-
-
-/* ===========================================================
-   TABELA DO CABEÇALHO
-=========================================================== */
-
-.cabecalho table{
-
-    width:100%;
-
-    border-collapse:collapse;
-
-    font-size:14px;
-
-}
-
-.cabecalho td{
-
-    padding:6px 8px;
-
-    vertical-align:top;
-
-}
-
-.cabecalho td strong{
-
-    color:#222;
-
-}
-
-.desempenho{
-
-    width:120px;
-
-    border:1px solid #000;
-
-    text-align:center;
-
-    font-weight:bold;
-
-    vertical-align:middle !important;
-
-}
-
-
-
-/* ===========================================================
-   TÍTULO DA AVALIAÇÃO
-=========================================================== */
-
-.titulo{
-
-    background:#004080;
-
-    color:#fff;
-
-    text-align:center;
-
-    font-size:22px;
-
-    font-weight:bold;
-
-    padding:12px;
-
-    margin-bottom:20px;
-
-    border-radius:2px;
-
-}
-
-
-
-/* ===========================================================
-   DESCRIÇÃO
-=========================================================== */
-
-.descricao{
-
-    margin-bottom:28px;
-
-    font-size:14px;
-
-    line-height:1.8;
-
-    white-space:pre-line;
-
-}
-
-
-
-/* ===========================================================
-   CONTAINER DOS ITENS
-=========================================================== */
-
-#questoes-container{
-
-    width:100%;
-
-}
-
-
-
-/* ===========================================================
-   ITEM
-=========================================================== */
-
-.item{
-
-    border:1px solid #d5d5d5;
-
-    margin-bottom:28px;
-
-    background:#fff;
-
-    page-break-inside:avoid;
-
-}
-
-
-
-/* ===========================================================
-   CABEÇALHO DO ITEM
-=========================================================== */
-
-.item-titulo{
-
-    background:#004080;
-
-    color:#fff;
-
-    padding:9px 14px;
-
-    font-weight:bold;
-
-    font-size:15px;
-
-}
-
-
-
-/* ===========================================================
-   CAPACIDADE
-=========================================================== */
-
-.item-capacidade{
-
-    padding:12px 14px;
-
-    color:#004080;
-
-    font-size:13px;
-
-    font-weight:bold;
-
-    border-bottom:1px solid #ececec;
-
-}
-
-
-
-/* ===========================================================
-   CONTEXTO
-=========================================================== */
-
-.item-contexto{
-
-    padding:14px;
-
-    font-size:14px;
-
-    line-height:1.8;
-
-    white-space:pre-line;
-
-}
-
-
-
-/* ===========================================================
-   PERGUNTA
-=========================================================== */
-
-.item-pergunta{
-
-    padding:14px;
-
-    font-size:15px;
-
-    line-height:1.8;
-
-}
-
-
-
-/* ===========================================================
-   ALTERNATIVAS
-=========================================================== */
-
-.item-alternativas{
-
-    padding:0 14px 14px;
-
-}
-
-.item-alternativas p{
-
-    margin:8px 0;
-
-    line-height:1.7;
-
-}
-
-
-
-/* ===========================================================
-   IMAGENS
-=========================================================== */
-
-.item img{
-
-    display:block;
-
-    max-width:100%;
-
-    height:auto;
-
-    margin:18px auto;
-
-}
-
-
-
-/* ===========================================================
-   BOTÃO IMPRIMIR
-=========================================================== */
-
-#btn-imprimir{
-
-    position:fixed;
-
-    right:20px;
-
-    bottom:20px;
-
-    width:46px;
-
-    height:46px;
-
-    border:none;
-
-    border-radius:50%;
-
-    background:#444;
-
-    color:#fff;
-
-    font-size:18px;
-
-    cursor:pointer;
-
-    box-shadow:0 5px 15px rgba(0,0,0,.25);
-
-    transition:.25s;
-
-    opacity:.80;
-
-    z-index:999;
-
-}
-
-#btn-imprimir:hover{
-
-    opacity:1;
-
-    background:#004080;
-
-    transform:scale(1.05);
-
-}
+});
