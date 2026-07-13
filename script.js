@@ -1,212 +1,412 @@
 // =======================================================
-// ELEMENTOS
+// GERADOR DE ATIVIDADES PRÁTICAS SENAI
+// PARTE 1
+// Inicialização + Navegação + Parser + Validação
 // =======================================================
 
 window.addEventListener("DOMContentLoaded", () => {
 
-const etapa1 = document.getElementById("etapa1");
-const etapa2 = document.getElementById("etapa2");
-const etapa3 = document.getElementById("etapa3");
+    // ===================================================
+    // ELEMENTOS
+    // ===================================================
 
-const btnEtapa1 = document.getElementById("btn-etapa1");
-const btnEtapa2 = document.getElementById("btn-etapa2");
-const btnVoltar = document.getElementById("voltar");
+    const etapa1 = document.getElementById("etapa1");
+    const etapa2 = document.getElementById("etapa2");
+    const etapa3 = document.getElementById("etapa3");
 
-const btnCopiar = document.getElementById("copiar");
-const btnGerar = document.getElementById("gerar");
+    const btnEtapa1 = document.getElementById("btn-etapa1");
+    const btnEtapa2 = document.getElementById("btn-etapa2");
+    const btnVoltar = document.getElementById("voltar");
 
-const modelo = document.getElementById("modelo");
-const entrada = document.getElementById("entrada");
-const erro = document.getElementById("erro");
+    const btnCopiar = document.getElementById("copiar");
+    const btnGerar = document.getElementById("gerar");
 
-const assistente = document.getElementById("assistente");
-const pagina = document.getElementById("pagina");
+    const modelo = document.getElementById("modelo");
+    const entrada = document.getElementById("entrada");
 
-const container = document.getElementById("questoes-container");
+    const erro = document.getElementById("erro");
 
-// =======================================================
-// NAVEGAÇÃO
-// =======================================================
+    const assistente = document.getElementById("assistente");
+    const pagina = document.getElementById("pagina");
 
-function mostrar(etapa){
+    const container = document.getElementById("questoes-container");
 
-    document.querySelectorAll(".etapa").forEach(e=>{
-        e.classList.remove("ativa");
-    });
 
-    etapa.classList.add("ativa");
 
-}
+    // ===================================================
+    // TROCA DE ETAPAS
+    // ===================================================
 
-btnEtapa1.onclick = ()=>mostrar(etapa2);
-btnEtapa2.onclick = ()=>mostrar(etapa3);
-btnVoltar.onclick = ()=>mostrar(etapa2);
+    function mostrar(etapa){
 
-// =======================================================
-// COPIAR MODELO
-// =======================================================
+        document.querySelectorAll(".etapa").forEach(e=>{
 
-btnCopiar.onclick = ()=>{
+            e.classList.remove("ativa");
 
-    navigator.clipboard.writeText(modelo.value);
+        });
 
-    btnCopiar.innerText="✔ Copiado";
-
-    setTimeout(()=>{
-
-        btnCopiar.innerText="📋 Copiar Estrutura";
-
-    },1500);
-
-};
-
-// =======================================================
-// VALIDAR
-// =======================================================
-
-function validarProva(p){
-
-    if(!p){
-
-        return "Atividade não encontrada.";
+        etapa.classList.add("ativa");
 
     }
 
-    if(!p.itens || !Array.isArray(p.itens)){
+    btnEtapa1.onclick = ()=>{
 
-        return "Itens inválidos.";
+        mostrar(etapa2);
 
-    }
+    };
 
-    if(p.itens.length===0){
+    btnEtapa2.onclick = ()=>{
 
-        return "Nenhum item encontrado.";
+        mostrar(etapa3);
 
-    }
+    };
 
-    return null;
+    btnVoltar.onclick = ()=>{
 
-}
+        mostrar(etapa2);
 
-// =======================================================
-// PARSER
-// =======================================================
+    };
 
-function parseProva(texto){
 
-    try{
 
-        texto = texto.trim();
+    // ===================================================
+    // COPIAR ESTRUTURA
+    // ===================================================
 
-        texto = texto.replace("const prova =","").trim();
+    btnCopiar.onclick = ()=>{
 
-        if(texto.endsWith(";")){
+        navigator.clipboard.writeText(modelo.value);
 
-            texto = texto.slice(0,-1);
+        btnCopiar.innerText="✔ Copiado";
+
+        setTimeout(()=>{
+
+            btnCopiar.innerText="📋 Copiar Estrutura";
+
+        },1500);
+
+    };
+
+
+
+    // ===================================================
+    // PARSER
+    // ===================================================
+
+    function parseProva(texto){
+
+        try{
+
+            texto = texto.trim();
+
+            texto = texto.replace(/^```javascript/i,"");
+            texto = texto.replace(/^```js/i,"");
+            texto = texto.replace(/^```/i,"");
+            texto = texto.replace(/```$/i,"");
+
+            texto = texto.trim();
+
+            texto = texto.replace(/^const\s+prova\s*=\s*/,"");
+
+            if(texto.endsWith(";")){
+
+                texto = texto.slice(0,-1);
+
+            }
+
+            const objeto = Function(
+
+                `"use strict";
+                return (${texto});
+                `
+
+            )();
+
+            return objeto;
 
         }
 
-        return Function("return ("+texto+")")();
+        catch(e){
+
+            console.error(e);
+
+            return null;
+
+        }
 
     }
 
-    catch(e){
+
+
+    // ===================================================
+    // VALIDAÇÃO
+    // ===================================================
+
+    function validarProva(prova){
+
+        if(!prova){
+
+            return "Não foi possível ler a estrutura da atividade.";
+
+        }
+
+        if(typeof prova !== "object"){
+
+            return "Estrutura inválida.";
+
+        }
+
+        if(!Array.isArray(prova.itens)){
+
+            return "A propriedade itens não foi encontrada.";
+
+        }
+
+        if(prova.itens.length===0){
+
+            return "Nenhum item encontrado.";
+
+        }
+
+        for(let i=0;i<prova.itens.length;i++){
+
+            const item = prova.itens[i];
+
+            if(typeof item !== "object"){
+
+                return `Item ${i+1} inválido.`;
+
+            }
+
+        }
 
         return null;
 
     }
 
-}
 
-// =======================================================
-// GERAR
-// =======================================================
 
-btnGerar.onclick = ()=>{
+    // ===================================================
+    // FUNÇÕES AUXILIARES
+    // ===================================================
 
-    erro.innerText="";
+    function texto(v){
 
-    const texto = entrada.value.trim();
+        if(v===undefined) return "";
 
-    if(!texto){
+        if(v===null) return "";
 
-        erro.innerText="Cole a atividade do ChatGPT.";
-
-        return;
+        return String(v);
 
     }
 
-    const prova = parseProva(texto);
+    function limpar(){
 
-    if(!prova){
+        erro.innerHTML="";
 
-        erro.innerText="Erro ao ler a estrutura.";
-
-        return;
+        container.innerHTML="";
 
     }
 
-    const erroValidacao = validarProva(prova);
+    function preencherCabecalho(prova){
 
-    if(erroValidacao){
+        document.getElementById("data").innerHTML = texto(prova.data);
 
-        erro.innerText = erroValidacao;
+        document.getElementById("docente").innerHTML = texto(prova.docente);
 
-        return;
+        document.getElementById("curso").innerHTML = texto(prova.curso);
+
+        document.getElementById("unidade").innerHTML = texto(prova.unidade);
+
+        document.getElementById("turma").innerHTML = texto(prova.turma);
+
+        document.getElementById("titulo").innerHTML = texto(prova.titulo);
+
+        document.getElementById("descricao").innerHTML = texto(prova.descricao);
 
     }
 
     // ===================================================
-    // CABEÇALHO
+    // DAQUI PARA BAIXO
+    // A PARTE 2 CONTINUA COM O BOTÃO "GERAR"
+    // E A RENDERIZAÇÃO DOS ITENS.
+    // ===================================================
+                            // ===================================================
+    // BOTÃO GERAR
     // ===================================================
 
-    document.getElementById("data").innerText = prova.data || "";
-    document.getElementById("docente").innerText = prova.docente || "";
-    document.getElementById("curso").innerText = prova.curso || "";
-    document.getElementById("unidade").innerText = prova.unidade || "";
-    document.getElementById("turma").innerText = prova.turma || "";
+    btnGerar.onclick = ()=>{
 
-    document.getElementById("titulo").innerText = prova.titulo || "";
-    document.getElementById("descricao").innerText = prova.descricao || "";
+        limpar();
 
-    assistente.style.display="none";
-    pagina.style.display="block";
+        const codigo = entrada.value.trim();
 
-    container.innerHTML="";
+        if(codigo===""){
+
+            erro.innerHTML="Cole a atividade gerada pelo ChatGPT.";
+
+            return;
+
+        }
+
+        // ===============================================
+        // PARSE
+        // ===============================================
+
+        const prova = parseProva(codigo);
+
+        if(!prova){
+
+            erro.innerHTML="Não foi possível interpretar o código informado.";
+
+            return;
+
+        }
+
+        // ===============================================
+        // VALIDAÇÃO
+        // ===============================================
+
+        const erroValidacao = validarProva(prova);
+
+        if(erroValidacao){
+
+            erro.innerHTML = erroValidacao;
+
+            return;
+
+        }
+
+        // ===============================================
+        // CABEÇALHO
+        // ===============================================
+
+        preencherCabecalho(prova);
+
+        // ===============================================
+        // PROTEÇÃO DOS DADOS
+        // ===============================================
+
+        prova.itens = prova.itens.map(item=>{
+
+            return{
+
+                capacidade:
+
+                    texto(item.capacidade),
+
+                contexto:
+
+                    texto(item.contexto),
+
+                pergunta:
+
+                    texto(item.pergunta),
+
+                alternativas:
+
+                    Array.isArray(item.alternativas)
+
+                    ? item.alternativas
+
+                    : []
+
+            };
+
+        });
+
+        // ===============================================
+        // EXIBIR PÁGINA
+        // ===============================================
+
+        assistente.style.display="none";
+
+        pagina.style.display="block";
+
+        // ===============================================
+        // GERAR TODOS OS ITENS
+        // ===============================================
+
+        prova.itens.forEach((item,index)=>{
+
+            renderizarItem(item,index);
+
+        });
+
+        // ===============================================
+        // ROLAR PARA O TOPO
+        // ===============================================
+
+        window.scrollTo({
+
+            top:0,
+
+            behavior:"smooth"
+
+        });
+
+        // ===============================================
+        // IMPRESSÃO
+        // ===============================================
+
+        const botao = document.getElementById("btn-imprimir");
+
+        if(botao){
+
+            botao.onclick=()=>{
+
+                botao.style.display="none";
+
+                setTimeout(()=>{
+
+                    window.print();
+
+                    setTimeout(()=>{
+
+                        botao.style.display="block";
+
+                    },700);
+
+                },150);
+
+            };
+
+        }
+
+        console.log(
+
+            "Atividade gerada:",
+
+            prova
+
+        );
+
+    };
+
+
 
     // ===================================================
-    // PROTEÇÃO
+    // A PARTE 3 CONTÉM:
+    //
+    // renderizarItem()
+    // renderizarAlternativas()
+    // fechamento do DOMContentLoaded
+    // ===================================================
+                            // ===================================================
+    // RENDERIZAR ITEM
     // ===================================================
 
-    prova.itens = prova.itens.map(item=>({
+    function renderizarItem(item,index){
 
-        capacidade:item.capacidade || "",
+        const div = document.createElement("div");
 
-        contexto:item.contexto || "",
+        div.className = "item";
 
-        pergunta:item.pergunta || "",
-
-        alternativas:Array.isArray(item.alternativas)
-            ? item.alternativas
-            : []
-
-    }));
-
-    // ===================================================
-    // RENDER
-    // ===================================================
-
-    prova.itens.forEach((item,i)=>{
-
-        const div=document.createElement("div");
-
-        div.className="item";
-
-        div.innerHTML=`
+        div.innerHTML = `
 
             <div class="item-titulo">
 
-                ITEM ${i+1}
+                ITEM ${index+1}
 
             </div>
 
@@ -230,48 +430,75 @@ btnGerar.onclick = ()=>{
 
         `;
 
+        // ===============================================
+        // ALTERNATIVAS (caso existam)
+        // ===============================================
+
         if(item.alternativas.length){
 
-            const alternativas=document.createElement("div");
+            div.appendChild(
 
-            alternativas.className="item-alternativas";
+                renderizarAlternativas(item.alternativas)
 
-            item.alternativas.forEach((alt,j)=>{
-
-                const p=document.createElement("p");
-
-                p.innerHTML=`${String.fromCharCode(65+j)}) ${alt}`;
-
-                alternativas.appendChild(p);
-
-            });
-
-            div.appendChild(alternativas);
+            );
 
         }
 
         container.appendChild(div);
 
-    });
+    }
 
-    window.scrollTo({
 
-        top:0,
 
-        behavior:"smooth"
+    // ===================================================
+    // RENDERIZAR ALTERNATIVAS
+    // ===================================================
 
-    });
+    function renderizarAlternativas(lista){
 
-    const btnImprimir=document.getElementById("btn-imprimir");
+        const alternativas = document.createElement("div");
 
-    if(btnImprimir){
+        alternativas.className="item-alternativas";
 
-        btnImprimir.onclick=()=>window.print();
+        lista.forEach((textoAlternativa,i)=>{
+
+            const p = document.createElement("p");
+
+            p.innerHTML = `
+
+                ${String.fromCharCode(65+i)}) ${textoAlternativa}
+
+            `;
+
+            alternativas.appendChild(p);
+
+        });
+
+        return alternativas;
 
     }
 
-    console.log("Atividade gerada com sucesso:",prova);
 
-};
+
+    // ===================================================
+    // FUNÇÃO EXTRA
+    // Caso queira gerar a prova pressionando CTRL+ENTER
+    // ===================================================
+
+    entrada.addEventListener("keydown",(e)=>{
+
+        if(e.ctrlKey && e.key==="Enter"){
+
+            btnGerar.click();
+
+        }
+
+    });
+
+
+
+    // ===================================================
+    // FECHAMENTO
+    // ===================================================
 
 });
