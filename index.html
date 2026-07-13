@@ -31,10 +31,11 @@
 
     .pagina{
         display:block !important;
-        box-shadow:none;
-        margin:0;
         width:100%;
+        margin:0;
+        padding:20px;
         border:none;
+        box-shadow:none;
     }
 
 }
@@ -45,34 +46,47 @@
 
 <body>
 
-<!-- ====================================================== -->
+<!-- ===================================================== -->
 <!-- ASSISTENTE -->
-<!-- ====================================================== -->
+<!-- ===================================================== -->
 
-<div class="assistente" id="assistente">
+<div
+class="assistente"
+id="assistente">
 
-    <!-- PASSO 1 -->
+    <!-- ETAPA 1 -->
 
-    <section class="etapa ativa" id="etapa1">
+    <section
+    class="etapa ativa"
+    id="etapa1">
 
         <img
         src="./assets/img/senai.webp"
-        class="logo-boas-vindas">
+        class="logo-boas-vindas"
+        alt="SENAI">
 
         <h1>
+
             Gerador de Atividades Práticas SENAI
+
         </h1>
 
         <p>
+
             Bem-vindo!
+
         </p>
 
         <p>
+
             Este sistema transforma uma atividade prática criada pelo ChatGPT em uma avaliação pronta para impressão no padrão SENAI.
+
         </p>
 
         <p>
+
             O processo leva menos de 1 minuto.
+
         </p>
 
         <button id="btn-etapa1">
@@ -85,9 +99,11 @@
 
 
 
-    <!-- PASSO 2 -->
+    <!-- ETAPA 2 -->
 
-    <section class="etapa" id="etapa2">
+    <section
+    class="etapa"
+    id="etapa2">
 
         <h2>
 
@@ -113,7 +129,9 @@
 
         </p>
 
-<textarea id="modelo" readonly>
+<textarea
+id="modelo"
+readonly>
 const prova = {
 
   data:"",
@@ -141,31 +159,31 @@ const prova = {
 }
 </textarea>
 
-<div class="botoes">
+        <div class="botoes">
 
-<button id="copiar">
+            <button id="copiar">
 
-📋 Copiar Estrutura
+                📋 Copiar Estrutura
 
-</button>
+            </button>
 
-<button id="btn-etapa2">
+            <button id="btn-etapa2">
 
-Próximo
+                Próximo
 
-</button>
+            </button>
 
-</div>
+        </div>
 
     </section>
 
 
 
+    <!-- ETAPA 3 -->
 
-
-    <!-- PASSO 3 -->
-
-    <section class="etapa" id="etapa3">
+    <section
+    class="etapa"
+    id="etapa3">
 
         <h2>
 
@@ -196,23 +214,23 @@ id="entrada"
 placeholder="Cole aqui o código iniciado por const prova = { ... }">
 </textarea>
 
-<div class="botoes">
+        <div class="botoes">
 
-<button id="voltar">
+            <button id="voltar">
 
-Voltar
+                Voltar
 
-</button>
+            </button>
 
-<button id="gerar">
+            <button id="gerar">
 
-Gerar Atividade
+                Gerar Atividade
 
-</button>
+            </button>
 
-</div>
+        </div>
 
-<div id="erro"></div>
+        <div id="erro"></div>
 
     </section>
 
@@ -220,110 +238,150 @@ Gerar Atividade
 
 
 
-
-
-<!-- ====================================================== -->
-<!-- PÁGINA DA ATIVIDADE -->
-<!-- ====================================================== -->
+<!-- ===================================================== -->
+<!-- PÁGINA DA PROVA -->
+<!-- ===================================================== -->
 
 <div
 class="pagina"
 id="pagina"
 style="display:none;">
 
-<div class="cabecalho">
+    <!-- CABEÇALHO -->
 
-<img
-src="./assets/img/senai1.png"
-class="logo">
+    <div class="cabecalho">
 
-<table>
+        <img
+        src="./assets/img/senai.webp"
+        alt="Logo SENAI"
+        class="logo">
 
-<tr>
+        <table>
 
-<td><strong>Data:</strong></td>
+            <tr>
 
-<td id="data"></td>
+                <td>
 
-<td
-rowspan="6"
-class="desempenho">
+                    <strong>Data:</strong>
 
-Desempenho
+                </td>
 
-</td>
+                <td id="data"></td>
 
-</tr>
+                <td
+                rowspan="6"
+                class="desempenho">
 
-<tr>
+                    Desempenho
 
-<td><strong>Docente:</strong></td>
+                </td>
 
-<td id="docente"></td>
+            </tr>
 
-</tr>
+            <tr>
 
-<tr>
+                <td>
 
-<td><strong>Curso:</strong></td>
+                    <strong>Docente:</strong>
 
-<td id="curso"></td>
+                </td>
 
-</tr>
+                <td id="docente"></td>
 
-<tr>
+            </tr>
 
-<td><strong>Unidade Curricular:</strong></td>
+            <tr>
 
-<td id="unidade"></td>
+                <td>
 
-</tr>
+                    <strong>Curso:</strong>
 
-<tr>
+                </td>
 
-<td><strong>Turma:</strong></td>
+                <td id="curso"></td>
 
-<td id="turma"></td>
+            </tr>
 
-</tr>
+            <tr>
 
-<tr>
+                <td>
 
-<td><strong>Técnico:</strong></td>
+                    <strong>Unidade Curricular:</strong>
 
-<td>
+                </td>
 
-______________________________________________
+                <td id="unidade"></td>
 
-</td>
+            </tr>
 
-</tr>
+            <tr>
 
-</table>
+                <td>
 
-</div>
+                    <strong>Turma:</strong>
 
-<div
-class="titulo"
-id="titulo">
-</div>
+                </td>
 
-<div
-class="instrucoes"
-id="descricao">
-</div>
+                <td id="turma"></td>
 
-<div
-id="questoes-container">
-</div>
+            </tr>
 
-<button
-id="btn-imprimir"
-onclick="window.print()">
+            <tr>
 
-🖨️ Imprimir / Salvar em PDF
+                <td>
 
-</button>
+                    <strong>Técnico:</strong>
+
+                </td>
+
+                <td>
+
+                    _______________________________
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- TÍTULO -->
+
+    <div
+    class="titulo"
+    id="titulo">
+    </div>
+
+
+
+    <!-- DESCRIÇÃO -->
+
+    <div
+    class="descricao"
+    id="descricao">
+    </div>
+
+
+
+    <!-- ITENS -->
+
+    <div
+    id="questoes-container">
+    </div>
+
+
+
+    <!-- BOTÃO IMPRIMIR -->
+
+    <button
+    id="btn-imprimir">
+
+        ⤓
+
+    </button>
 
 </div>
 
