@@ -1,504 +1,911 @@
-// =======================================================
-// GERADOR DE ATIVIDADES PRÁTICAS SENAI
-// PARTE 1
-// Inicialização + Navegação + Parser + Validação
-// =======================================================
+/* ===========================================================
+   RESET
+=========================================================== */
 
-window.addEventListener("DOMContentLoaded", () => {
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-    // ===================================================
-    // ELEMENTOS
-    // ===================================================
+html{
 
-    const etapa1 = document.getElementById("etapa1");
-    const etapa2 = document.getElementById("etapa2");
-    const etapa3 = document.getElementById("etapa3");
+    scroll-behavior:smooth;
 
-    const btnEtapa1 = document.getElementById("btn-etapa1");
-    const btnEtapa2 = document.getElementById("btn-etapa2");
-    const btnVoltar = document.getElementById("voltar");
+}
 
-    const btnCopiar = document.getElementById("copiar");
-    const btnGerar = document.getElementById("gerar");
+body{
 
-    const modelo = document.getElementById("modelo");
-    const entrada = document.getElementById("entrada");
+    font-family:Arial,Helvetica,sans-serif;
 
-    const erro = document.getElementById("erro");
+    background:#ececec;
 
-    const assistente = document.getElementById("assistente");
-    const pagina = document.getElementById("pagina");
+    color:#222;
 
-    const container = document.getElementById("questoes-container");
+    padding:40px;
+
+    line-height:1.6;
+
+}
 
 
 
-    // ===================================================
-    // TROCA DE ETAPAS
-    // ===================================================
+/* ===========================================================
+   ASSISTENTE
+=========================================================== */
 
-    function mostrar(etapa){
+.assistente{
 
-        document.querySelectorAll(".etapa").forEach(e=>{
+    width:100%;
 
-            e.classList.remove("ativa");
+    max-width:950px;
 
-        });
+    margin:auto;
 
-        etapa.classList.add("ativa");
-
-    }
-
-    btnEtapa1.onclick = ()=>{
-
-        mostrar(etapa2);
-
-    };
-
-    btnEtapa2.onclick = ()=>{
-
-        mostrar(etapa3);
-
-    };
-
-    btnVoltar.onclick = ()=>{
-
-        mostrar(etapa2);
-
-    };
+}
 
 
 
-    // ===================================================
-    // COPIAR ESTRUTURA
-    // ===================================================
+/* ===========================================================
+   ETAPAS
+=========================================================== */
 
-    btnCopiar.onclick = ()=>{
+.etapa{
 
-        navigator.clipboard.writeText(modelo.value);
+    display:none;
 
-        btnCopiar.innerText="✔ Copiado";
+    background:#fff;
 
-        setTimeout(()=>{
+    border-radius:12px;
 
-            btnCopiar.innerText="📋 Copiar Estrutura";
+    padding:45px;
 
-        },1500);
+    box-shadow:0 10px 35px rgba(0,0,0,.10);
 
-    };
+    animation:fade .35s ease;
 
+}
 
+.etapa.ativa{
 
-    // ===================================================
-    // PARSER
-    // ===================================================
+    display:block;
 
-    function parseProva(texto){
+}
 
-        try{
+@keyframes fade{
 
-            texto = texto.trim();
+    from{
 
-            texto = texto.replace(/^```javascript/i,"");
-            texto = texto.replace(/^```js/i,"");
-            texto = texto.replace(/^```/i,"");
-            texto = texto.replace(/```$/i,"");
+        opacity:0;
 
-            texto = texto.trim();
-
-            texto = texto.replace(/^const\s+prova\s*=\s*/,"");
-
-            if(texto.endsWith(";")){
-
-                texto = texto.slice(0,-1);
-
-            }
-
-            const objeto = Function(
-
-                `"use strict";
-                return (${texto});
-                `
-
-            )();
-
-            return objeto;
-
-        }
-
-        catch(e){
-
-            console.error(e);
-
-            return null;
-
-        }
+        transform:translateY(15px);
 
     }
 
+    to{
 
+        opacity:1;
 
-    // ===================================================
-    // VALIDAÇÃO
-    // ===================================================
-
-    function validarProva(prova){
-
-        if(!prova){
-
-            return "Não foi possível ler a estrutura da atividade.";
-
-        }
-
-        if(typeof prova !== "object"){
-
-            return "Estrutura inválida.";
-
-        }
-
-        if(!Array.isArray(prova.itens)){
-
-            return "A propriedade itens não foi encontrada.";
-
-        }
-
-        if(prova.itens.length===0){
-
-            return "Nenhum item encontrado.";
-
-        }
-
-        for(let i=0;i<prova.itens.length;i++){
-
-            const item = prova.itens[i];
-
-            if(typeof item !== "object"){
-
-                return `Item ${i+1} inválido.`;
-
-            }
-
-        }
-
-        return null;
+        transform:translateY(0);
 
     }
 
+}
 
 
-    // ===================================================
-    // FUNÇÕES AUXILIARES
-    // ===================================================
 
-    function texto(v){
+/* ===========================================================
+   LOGO
+=========================================================== */
 
-        if(v===undefined) return "";
+.logo-boas-vindas{
 
-        if(v===null) return "";
+    display:block;
 
-        return String(v);
+    width:170px;
 
-    }
+    margin:0 auto 35px auto;
 
-    function limpar(){
+}
 
-        erro.innerHTML="";
 
-        container.innerHTML="";
 
-    }
+/* ===========================================================
+   TÍTULOS
+=========================================================== */
 
-    function preencherCabecalho(prova){
+.etapa h1{
 
-        document.getElementById("data").innerHTML = texto(prova.data);
+    text-align:center;
 
-        document.getElementById("docente").innerHTML = texto(prova.docente);
+    color:#004080;
 
-        document.getElementById("curso").innerHTML = texto(prova.curso);
+    font-size:34px;
 
-        document.getElementById("unidade").innerHTML = texto(prova.unidade);
+    margin-bottom:25px;
 
-        document.getElementById("turma").innerHTML = texto(prova.turma);
+}
 
-        document.getElementById("titulo").innerHTML = texto(prova.titulo);
+.etapa h2{
 
-        document.getElementById("descricao").innerHTML = texto(prova.descricao);
+    color:#004080;
 
-    }
+    font-size:25px;
 
-    // ===================================================
-    // DAQUI PARA BAIXO
-    // A PARTE 2 CONTINUA COM O BOTÃO "GERAR"
-    // E A RENDERIZAÇÃO DOS ITENS.
-    // ===================================================
-                            // ===================================================
-    // BOTÃO GERAR
-    // ===================================================
+    margin-bottom:15px;
 
-    btnGerar.onclick = ()=>{
+}
 
-        limpar();
+.etapa h3{
 
-        const codigo = entrada.value.trim();
+    margin-bottom:20px;
 
-        if(codigo===""){
+    font-size:20px;
 
-            erro.innerHTML="Cole a atividade gerada pelo ChatGPT.";
+}
 
-            return;
 
-        }
 
-        // ===============================================
-        // PARSE
-        // ===============================================
+/* ===========================================================
+   PARÁGRAFOS
+=========================================================== */
 
-        const prova = parseProva(codigo);
+.etapa p{
 
-        if(!prova){
+    margin-bottom:15px;
 
-            erro.innerHTML="Não foi possível interpretar o código informado.";
+    line-height:1.7;
 
-            return;
+    font-size:16px;
 
-        }
+}
 
-        // ===============================================
-        // VALIDAÇÃO
-        // ===============================================
 
-        const erroValidacao = validarProva(prova);
 
-        if(erroValidacao){
+/* ===========================================================
+   TEXTAREAS
+=========================================================== */
 
-            erro.innerHTML = erroValidacao;
+textarea{
 
-            return;
+    width:100%;
 
-        }
+    min-height:380px;
 
-        // ===============================================
-        // CABEÇALHO
-        // ===============================================
+    resize:vertical;
 
-        preencherCabecalho(prova);
+    margin-top:20px;
 
-        // ===============================================
-        // PROTEÇÃO DOS DADOS
-        // ===============================================
+    border:1px solid #c9c9c9;
 
-        prova.itens = prova.itens.map(item=>{
+    border-radius:8px;
 
-            return{
+    background:#fafafa;
 
-                capacidade:
+    padding:18px;
 
-                    texto(item.capacidade),
+    font-family:Consolas,monospace;
 
-                contexto:
+    font-size:14px;
 
-                    texto(item.contexto),
+    line-height:1.6;
 
-                pergunta:
+    outline:none;
 
-                    texto(item.pergunta),
+    transition:.25s;
 
-                alternativas:
+}
 
-                    Array.isArray(item.alternativas)
+textarea:focus{
 
-                    ? item.alternativas
+    border-color:#004080;
 
-                    : []
+    box-shadow:0 0 0 3px rgba(0,64,128,.12);
 
-            };
+}
 
-        });
 
-        // ===============================================
-        // EXIBIR PÁGINA
-        // ===============================================
 
-        assistente.style.display="none";
+/* ===========================================================
+   BOTÕES
+=========================================================== */
 
-        pagina.style.display="block";
+.botoes{
 
-        // ===============================================
-        // GERAR TODOS OS ITENS
-        // ===============================================
+    display:flex;
 
-        prova.itens.forEach((item,index)=>{
+    justify-content:flex-end;
 
-            renderizarItem(item,index);
+    gap:15px;
 
-        });
+    margin-top:30px;
 
-        // ===============================================
-        // ROLAR PARA O TOPO
-        // ===============================================
+    flex-wrap:wrap;
 
-        window.scrollTo({
+}
 
-            top:0,
+button{
 
-            behavior:"smooth"
+    border:none;
 
-        });
+    cursor:pointer;
 
-        // ===============================================
-        // IMPRESSÃO
-        // ===============================================
+    background:#004080;
 
-        const botao = document.getElementById("btn-imprimir");
+    color:#fff;
 
-        if(botao){
+    padding:14px 28px;
 
-            botao.onclick=()=>{
+    border-radius:8px;
 
-                botao.style.display="none";
+    font-size:15px;
 
-                setTimeout(()=>{
+    transition:.25s;
 
-                    window.print();
+    font-weight:bold;
 
-                    setTimeout(()=>{
+}
 
-                        botao.style.display="block";
+button:hover{
 
-                    },700);
+    background:#005ab5;
 
-                },150);
+    transform:translateY(-1px);
 
-            };
+}
 
-        }
+button:active{
 
-        console.log(
+    transform:scale(.98);
 
-            "Atividade gerada:",
+}
 
-            prova
 
-        );
 
-    };
+/* ===========================================================
+   MENSAGEM DE ERRO
+=========================================================== */
 
+#erro{
 
+    margin-top:20px;
 
-    // ===================================================
-    // A PARTE 3 CONTÉM:
-    //
-    // renderizarItem()
-    // renderizarAlternativas()
-    // fechamento do DOMContentLoaded
-    // ===================================================
-                            // ===================================================
-    // RENDERIZAR ITEM
-    // ===================================================
+    color:#d00000;
 
-    function renderizarItem(item,index){
+    font-weight:bold;
 
-        const div = document.createElement("div");
+    font-size:15px;
 
-        div.className = "item";
+    line-height:1.5;
 
-        div.innerHTML = `
+}
 
-            <div class="item-titulo">
 
-                ITEM ${index+1}
 
-            </div>
+/* ===========================================================
+   PÁGINA DA PROVA
+=========================================================== */
 
-            <div class="item-capacidade">
+.pagina{
 
-                CAPACIDADE: ${item.capacidade}
+    display:none;
 
-            </div>
+    width:900px;
 
-            <div class="item-contexto">
+    margin:40px auto;
 
-                ${item.contexto}
+    background:white;
 
-            </div>
+    padding:35px;
 
-            <div class="item-pergunta">
+    border:1px solid #d5d5d5;
 
-                ${item.pergunta}
+    box-shadow:0 12px 35px rgba(0,0,0,.12);
 
-            </div>
+}
+/* ===========================================================
+   CABEÇALHO DA AVALIAÇÃO
+=========================================================== */
 
-        `;
+.cabecalho{
 
-        // ===============================================
-        // ALTERNATIVAS (caso existam)
-        // ===============================================
+    display:flex;
 
-        if(item.alternativas.length){
+    align-items:flex-start;
 
-            div.appendChild(
+    gap:22px;
 
-                renderizarAlternativas(item.alternativas)
+    margin-bottom:35px;
 
-            );
+}
 
-        }
+.logo{
 
-        container.appendChild(div);
+    width:145px;
 
-    }
+    flex-shrink:0;
 
+}
 
 
-    // ===================================================
-    // RENDERIZAR ALTERNATIVAS
-    // ===================================================
 
-    function renderizarAlternativas(lista){
+/* ===========================================================
+   TABELA DO CABEÇALHO
+=========================================================== */
 
-        const alternativas = document.createElement("div");
+.cabecalho table{
 
-        alternativas.className="item-alternativas";
+    width:100%;
 
-        lista.forEach((textoAlternativa,i)=>{
+    border-collapse:collapse;
 
-            const p = document.createElement("p");
+    font-size:14px;
 
-            p.innerHTML = `
+}
 
-                ${String.fromCharCode(65+i)}) ${textoAlternativa}
+.cabecalho td{
 
-            `;
+    padding:6px 8px;
 
-            alternativas.appendChild(p);
+    vertical-align:top;
 
-        });
+}
 
-        return alternativas;
+.cabecalho td strong{
 
-    }
+    color:#222;
 
+}
 
+.desempenho{
 
-    // ===================================================
-    // FUNÇÃO EXTRA
-    // Caso queira gerar a prova pressionando CTRL+ENTER
-    // ===================================================
+    width:120px;
 
-    entrada.addEventListener("keydown",(e)=>{
+    border:1px solid #000;
 
-        if(e.ctrlKey && e.key==="Enter"){
+    text-align:center;
 
-            btnGerar.click();
+    font-weight:bold;
 
-        }
+    vertical-align:middle !important;
 
-    });
+}
 
 
 
-    // ===================================================
-    // FECHAMENTO
-    // ===================================================
+/* ===========================================================
+   TÍTULO DA AVALIAÇÃO
+=========================================================== */
 
-});
+.titulo{
+
+    background:#004080;
+
+    color:#fff;
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    padding:12px;
+
+    margin-bottom:20px;
+
+    border-radius:2px;
+
+}
+
+
+
+/* ===========================================================
+   DESCRIÇÃO
+=========================================================== */
+
+.descricao{
+
+    margin-bottom:28px;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    white-space:pre-line;
+
+}
+
+
+
+/* ===========================================================
+   CONTAINER DOS ITENS
+=========================================================== */
+
+#questoes-container{
+
+    width:100%;
+
+}
+
+
+
+/* ===========================================================
+   ITEM
+=========================================================== */
+
+.item{
+
+    border:1px solid #d5d5d5;
+
+    margin-bottom:28px;
+
+    background:#fff;
+
+    page-break-inside:avoid;
+
+}
+
+
+
+/* ===========================================================
+   CABEÇALHO DO ITEM
+=========================================================== */
+
+.item-titulo{
+
+    background:#004080;
+
+    color:#fff;
+
+    padding:9px 14px;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+}
+
+
+
+/* ===========================================================
+   CAPACIDADE
+=========================================================== */
+
+.item-capacidade{
+
+    padding:12px 14px;
+
+    color:#004080;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+
+
+/* ===========================================================
+   CONTEXTO
+=========================================================== */
+
+.item-contexto{
+
+    padding:14px;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    white-space:pre-line;
+
+}
+
+
+
+/* ===========================================================
+   PERGUNTA
+=========================================================== */
+
+.item-pergunta{
+
+    padding:14px;
+
+    font-size:15px;
+
+    line-height:1.8;
+
+}
+
+
+
+/* ===========================================================
+   ALTERNATIVAS
+=========================================================== */
+
+.item-alternativas{
+
+    padding:0 14px 14px;
+
+}
+
+.item-alternativas p{
+
+    margin:8px 0;
+
+    line-height:1.7;
+
+}
+
+
+
+/* ===========================================================
+   IMAGENS
+=========================================================== */
+
+.item img{
+
+    display:block;
+
+    max-width:100%;
+
+    height:auto;
+
+    margin:18px auto;
+
+}
+
+
+
+/* ===========================================================
+   BOTÃO IMPRIMIR
+=========================================================== */
+
+#btn-imprimir{
+
+    position:fixed;
+
+    right:20px;
+
+    bottom:20px;
+
+    width:46px;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#444;
+
+    color:#fff;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.25);
+
+    transition:.25s;
+
+    opacity:.80;
+
+    z-index:999;
+
+}
+
+#btn-imprimir:hover{
+
+    opacity:1;
+
+    background:#004080;
+
+    transform:scale(1.05);
+
+}
+/* ===========================================================
+   CABEÇALHO DA AVALIAÇÃO
+=========================================================== */
+
+.cabecalho{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:22px;
+
+    margin-bottom:35px;
+
+}
+
+.logo{
+
+    width:145px;
+
+    flex-shrink:0;
+
+}
+
+
+
+/* ===========================================================
+   TABELA DO CABEÇALHO
+=========================================================== */
+
+.cabecalho table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    font-size:14px;
+
+}
+
+.cabecalho td{
+
+    padding:6px 8px;
+
+    vertical-align:top;
+
+}
+
+.cabecalho td strong{
+
+    color:#222;
+
+}
+
+.desempenho{
+
+    width:120px;
+
+    border:1px solid #000;
+
+    text-align:center;
+
+    font-weight:bold;
+
+    vertical-align:middle !important;
+
+}
+
+
+
+/* ===========================================================
+   TÍTULO DA AVALIAÇÃO
+=========================================================== */
+
+.titulo{
+
+    background:#004080;
+
+    color:#fff;
+
+    text-align:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    padding:12px;
+
+    margin-bottom:20px;
+
+    border-radius:2px;
+
+}
+
+
+
+/* ===========================================================
+   DESCRIÇÃO
+=========================================================== */
+
+.descricao{
+
+    margin-bottom:28px;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    white-space:pre-line;
+
+}
+
+
+
+/* ===========================================================
+   CONTAINER DOS ITENS
+=========================================================== */
+
+#questoes-container{
+
+    width:100%;
+
+}
+
+
+
+/* ===========================================================
+   ITEM
+=========================================================== */
+
+.item{
+
+    border:1px solid #d5d5d5;
+
+    margin-bottom:28px;
+
+    background:#fff;
+
+    page-break-inside:avoid;
+
+}
+
+
+
+/* ===========================================================
+   CABEÇALHO DO ITEM
+=========================================================== */
+
+.item-titulo{
+
+    background:#004080;
+
+    color:#fff;
+
+    padding:9px 14px;
+
+    font-weight:bold;
+
+    font-size:15px;
+
+}
+
+
+
+/* ===========================================================
+   CAPACIDADE
+=========================================================== */
+
+.item-capacidade{
+
+    padding:12px 14px;
+
+    color:#004080;
+
+    font-size:13px;
+
+    font-weight:bold;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+
+
+/* ===========================================================
+   CONTEXTO
+=========================================================== */
+
+.item-contexto{
+
+    padding:14px;
+
+    font-size:14px;
+
+    line-height:1.8;
+
+    white-space:pre-line;
+
+}
+
+
+
+/* ===========================================================
+   PERGUNTA
+=========================================================== */
+
+.item-pergunta{
+
+    padding:14px;
+
+    font-size:15px;
+
+    line-height:1.8;
+
+}
+
+
+
+/* ===========================================================
+   ALTERNATIVAS
+=========================================================== */
+
+.item-alternativas{
+
+    padding:0 14px 14px;
+
+}
+
+.item-alternativas p{
+
+    margin:8px 0;
+
+    line-height:1.7;
+
+}
+
+
+
+/* ===========================================================
+   IMAGENS
+=========================================================== */
+
+.item img{
+
+    display:block;
+
+    max-width:100%;
+
+    height:auto;
+
+    margin:18px auto;
+
+}
+
+
+
+/* ===========================================================
+   BOTÃO IMPRIMIR
+=========================================================== */
+
+#btn-imprimir{
+
+    position:fixed;
+
+    right:20px;
+
+    bottom:20px;
+
+    width:46px;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#444;
+
+    color:#fff;
+
+    font-size:18px;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.25);
+
+    transition:.25s;
+
+    opacity:.80;
+
+    z-index:999;
+
+}
+
+#btn-imprimir:hover{
+
+    opacity:1;
+
+    background:#004080;
+
+    transform:scale(1.05);
+
+}
