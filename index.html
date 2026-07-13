@@ -4,9 +4,15 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gerador de Atividades Práticas SENAI</title>
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+Gerador de Atividades Práticas SENAI
+
+</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -15,27 +21,41 @@
 @media print{
 
     body{
+
         background:white;
+
         margin:0;
+
         -webkit-print-color-adjust:exact;
+
         print-color-adjust:exact;
+
     }
 
     .assistente{
+
         display:none !important;
+
     }
 
     #btn-imprimir{
+
         display:none !important;
+
     }
 
     .pagina{
+
         display:block !important;
+
         width:100%;
+
         margin:0;
-        padding:20px;
+
         border:none;
+
         box-shadow:none;
+
     }
 
 }
@@ -54,80 +74,90 @@
 class="assistente"
 id="assistente">
 
-    <!-- ETAPA 1 -->
+<!-- ===================================================== -->
+<!-- ETAPA 1 -->
+<!-- ===================================================== -->
 
-    <section
-    class="etapa ativa"
-    id="etapa1">
+<section
+class="etapa ativa"
+id="etapa1">
 
-        <img
-        src="./assets/img/senai.webp"
-        class="logo-boas-vindas"
-        alt="SENAI">
+<img
 
-        <h1>
+src="./assets/img/senai.webp"
 
-            Gerador de Atividades Práticas SENAI
+class="logo-boas-vindas"
 
-        </h1>
+alt="SENAI"
 
-        <p>
+>
 
-            Bem-vindo!
+<h1>
 
-        </p>
+Gerador de Atividades Práticas SENAI
 
-        <p>
+</h1>
 
-            Este sistema transforma uma atividade prática criada pelo ChatGPT em uma avaliação pronta para impressão no padrão SENAI.
+<p>
 
-        </p>
+Bem-vindo.
 
-        <p>
+</p>
 
-            O processo leva menos de 1 minuto.
+<p>
 
-        </p>
+Este sistema transforma uma atividade prática criada pelo ChatGPT em uma avaliação pronta para impressão seguindo o padrão SENAI.
 
-        <button id="btn-etapa1">
+</p>
 
-            Começar
+<p>
 
-        </button>
+O processo leva menos de um minuto.
 
-    </section>
+</p>
+
+<button
+id="btn-etapa1">
+
+Começar
+
+</button>
+
+</section>
 
 
 
-    <!-- ETAPA 2 -->
+<!-- ===================================================== -->
+<!-- ETAPA 2 -->
+<!-- ===================================================== -->
 
-    <section
-    class="etapa"
-    id="etapa2">
+<section
+class="etapa"
+id="etapa2">
 
-        <h2>
+<h2>
 
-            Passo 1 de 3
+Passo 1 de 3
 
-        </h2>
+</h2>
 
-        <h3>
+<h3>
 
-            Estrutura da Atividade
+Estrutura da Atividade
 
-        </h3>
+</h3>
 
-        <p>
+<p>
 
-            Copie a estrutura abaixo.
+Copie a estrutura abaixo.
 
-        </p>
+</p>
 
-        <p>
+<p>
 
-            Cole no ChatGPT e peça para gerar uma atividade prática utilizando exatamente esse mesmo formato.
+Cole no ChatGPT e solicite que a atividade seja gerada exatamente nesse formato.
 
-        </p>
+</p>
 
 <textarea
 id="modelo"
@@ -148,8 +178,87 @@ const prova = {
     {
 
       capacidade:"",
+
       contexto:"",
-      pergunta:"",
+
+      pergunta:`
+
+Descreva aqui toda a atividade prática.
+
+Organize a atividade exatamente nesta sequência:
+
+1. Contextualização profissional;
+
+2. Desafio proposto;
+
+3. Desenvolvimento da atividade;
+
+4. Requisitos gerais;
+
+5. Critérios de avaliação (utilizando tabela HTML);
+
+6. Forma de entrega.
+
+Utilize HTML sempre que necessário:
+
+<b>Títulos</b>
+
+<br>
+
+<ul>
+
+<li>Listas</li>
+
+<li>Etapas</li>
+
+</ul>
+
+<table border="1">
+
+<thead>
+
+<tr>
+
+<th>Critério</th>
+
+<th>Capacidade Avaliada</th>
+
+<th>Sim</th>
+
+<th>Parcial</th>
+
+<th>Não</th>
+
+<th>Justificativa</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Exemplo</td>
+
+<td>Descrição</td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+<td></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+`,
+
       alternativas:[]
 
     }
@@ -159,86 +268,103 @@ const prova = {
 }
 </textarea>
 
-        <div class="botoes">
+<div
+class="botoes">
 
-            <button id="copiar">
+<button
+id="copiar">
 
-                📋 Copiar Estrutura
+📋 Copiar Estrutura
 
-            </button>
+</button>
 
-            <button id="btn-etapa2">
+<button
+id="btn-etapa2">
 
-                Próximo
+Próximo
 
-            </button>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- ETAPA 3 -->
-
-    <section
-    class="etapa"
-    id="etapa3">
-
-        <h2>
-
-            Passo 2 de 3
-
-        </h2>
-
-        <h3>
-
-            Cole aqui a resposta do ChatGPT
-
-        </h3>
-
-        <p>
-
-            Gere sua atividade utilizando exatamente a estrutura anterior.
-
-        </p>
-
-        <p>
-
-            Depois copie toda a resposta e cole abaixo.
-
-        </p>
-
-<textarea
-id="entrada"
-placeholder="Cole aqui o código iniciado por const prova = { ... }">
-</textarea>
-
-        <div class="botoes">
-
-            <button id="voltar">
-
-                Voltar
-
-            </button>
-
-            <button id="gerar">
-
-                Gerar Atividade
-
-            </button>
-
-        </div>
-
-        <div id="erro"></div>
-
-    </section>
+</button>
 
 </div>
+
+</section>
 
 
 
 <!-- ===================================================== -->
+<!-- ETAPA 3 -->
+<!-- ===================================================== -->
+
+<section
+class="etapa"
+id="etapa3">
+
+<h2>
+
+Passo 2 de 3
+
+</h2>
+
+<h3>
+
+Cole abaixo a resposta do ChatGPT
+
+</h3>
+
+<p>
+
+Cole exatamente o código iniciado por:
+
+<b>
+
+const prova = {
+
+...
+
+}
+
+</b>
+
+</p>
+
+<textarea
+
+id="entrada"
+
+placeholder="Cole aqui o código completo iniciado por const prova = { ... }"
+
+></textarea>
+
+<div
+class="botoes">
+
+<button
+id="voltar">
+
+Voltar
+
+</button>
+
+<button
+id="gerar">
+
+Gerar Atividade
+
+</button>
+
+</div>
+
+<div
+id="erro">
+
+</div>
+
+</section>
+
+</div>
+
+<!-- CONTINUA NA PARTE 2 -->
+    <!-- ===================================================== -->
 <!-- PÁGINA DA PROVA -->
 <!-- ===================================================== -->
 
@@ -247,143 +373,149 @@ class="pagina"
 id="pagina"
 style="display:none;">
 
-    <!-- CABEÇALHO -->
+<!-- =============================================== -->
+<!-- CABEÇALHO -->
+<!-- =============================================== -->
 
-    <div class="cabecalho">
+<div class="cabecalho">
 
-        <img
-        src="./assets/img/senai.webp"
-        alt="Logo SENAI"
-        class="logo">
+    <img
 
-        <table>
+    src="./assets/img/senai.webp"
 
-            <tr>
+    class="logo"
 
-                <td>
+    alt="SENAI"
 
-                    <strong>Data:</strong>
+    >
 
-                </td>
+    <table>
 
-                <td id="data"></td>
+        <tr>
 
-                <td
-                rowspan="6"
-                class="desempenho">
+            <td><strong>Data:</strong></td>
 
-                    Desempenho
+            <td id="data"></td>
 
-                </td>
+            <td
+            rowspan="6"
+            class="desempenho">
 
-            </tr>
+                Desempenho
 
-            <tr>
+            </td>
 
-                <td>
+        </tr>
 
-                    <strong>Docente:</strong>
+        <tr>
 
-                </td>
+            <td><strong>Docente:</strong></td>
 
-                <td id="docente"></td>
+            <td id="docente"></td>
 
-            </tr>
+        </tr>
 
-            <tr>
+        <tr>
 
-                <td>
+            <td><strong>Curso:</strong></td>
 
-                    <strong>Curso:</strong>
+            <td id="curso"></td>
 
-                </td>
+        </tr>
 
-                <td id="curso"></td>
+        <tr>
 
-            </tr>
+            <td><strong>Unidade Curricular:</strong></td>
 
-            <tr>
+            <td id="unidade"></td>
 
-                <td>
+        </tr>
 
-                    <strong>Unidade Curricular:</strong>
+        <tr>
 
-                </td>
+            <td><strong>Turma:</strong></td>
 
-                <td id="unidade"></td>
+            <td id="turma"></td>
 
-            </tr>
+        </tr>
 
-            <tr>
+        <tr>
 
-                <td>
+            <td><strong>Técnico:</strong></td>
 
-                    <strong>Turma:</strong>
+            <td>
 
-                </td>
+_______________________________________________
 
-                <td id="turma"></td>
+            </td>
 
-            </tr>
+        </tr>
 
-            <tr>
-
-                <td>
-
-                    <strong>Técnico:</strong>
-
-                </td>
-
-                <td>
-
-                    _______________________________
-
-                </td>
-
-            </tr>
-
-        </table>
-
-    </div>
-
-
-
-    <!-- TÍTULO -->
-
-    <div
-    class="titulo"
-    id="titulo">
-    </div>
-
-
-
-    <!-- DESCRIÇÃO -->
-
-    <div
-    class="descricao"
-    id="descricao">
-    </div>
-
-
-
-    <!-- ITENS -->
-
-    <div
-    id="questoes-container">
-    </div>
-
-
-
-    <!-- BOTÃO IMPRIMIR -->
-
-    <button
-    id="btn-imprimir">
-
-        ⤓
-
-    </button>
+    </table>
 
 </div>
+
+<!-- =============================================== -->
+<!-- TÍTULO -->
+<!-- =============================================== -->
+
+<div
+
+id="titulo"
+
+class="titulo"
+
+>
+
+</div>
+
+<!-- =============================================== -->
+<!-- DESCRIÇÃO -->
+<!-- =============================================== -->
+
+<div
+
+id="descricao"
+
+class="descricao"
+
+>
+
+</div>
+
+<!-- =============================================== -->
+<!-- ITENS -->
+<!-- =============================================== -->
+
+<div
+
+id="questoes-container"
+
+>
+
+</div>
+
+<!-- =============================================== -->
+<!-- BOTÃO IMPRIMIR -->
+<!-- =============================================== -->
+
+<button
+
+id="btn-imprimir"
+
+type="button"
+
+>
+
+🖨️ Imprimir / Salvar em PDF
+
+</button>
+
+</div>
+
+<!-- ===================================================== -->
+<!-- SCRIPT -->
+<!-- ===================================================== -->
 
 <script src="script.js"></script>
 
